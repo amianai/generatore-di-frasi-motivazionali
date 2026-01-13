@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Frasi Motivazionali (n-gram)</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  </head>
+  <body>
+    <div id="app" class="container">
+      <header>
+        <h1>Frasi Motivazionali (n-gram)</h1>
+        <p class="subtitle">
+          Generatore semplice con controlli chiari: mood, seed e parametri di sampling.
+        </p>
+      </header>
+
+      <section class="card">
+        <div class="form-grid">
+          <label>
+            Mood
+            <select v-model="form.mood">
+              <option v-for="mood in moods" :key="mood.name" :value="mood.name">
+                {{ mood.name }}
+              </option>
+            </select>
+            <small class="hint">{{ moodDescription }}</small>
+          </label>
+
+          <label>
+            Parole iniziali (seed opzionale)
+            <input v-model="form.seed" placeholder="es. oggi" />
+          </label>
+
+          <label>
+            Lunghezza (token)
+            <input type="number" v-model.number="form.max_tokens" min="5" max="100" />
+          </label>
+
+          <label>
+            N-gram (2-4)
+            <select v-model.number="form.n">
+              <option :value="2">2</option>
+              <option :value="3">3</option>
+              <option :value="4">4</option>
+            </select>
+          </label>
+
+          <label>
+            Top-k
+            <input type="number" v-model.number="form.top_k" min="0" max="200" />
+          </label>
+
+          <label>
+            Temperatura
+            <input type="number" v-model.number="form.temperature" min="0.2" max="2.0" step="0.1" />
+          </label>
+        </div>
+
+        <button class="primary" :disabled="loading" @click="generate">
+          {{ loading ? "Genero..." : "Genera" }}
+        </button>
+      </section>
+
+      <section class="card">
+        <h2>Output</h2>
+        <p class="output">{{ output || "Nessuna frase generata." }}</p>
+      </section>
+
+      <section class="card info">
+        <h2>Info parametri</h2>
+        <ul>
+          <li><strong>Mood:</strong> {{ info.mood }}</li>
+          <li><strong>Seed usato:</strong> {{ info.seed }}</li>
+          <li><strong>N:</strong> {{ info.n }}</li>
+          <li><strong>Top-k:</strong> {{ info.top_k }}</li>
+          <li><strong>Temperatura:</strong> {{ info.temperature }}</li>
+          <li><strong>Max tokens:</strong> {{ info.max_tokens }}</li>
+        </ul>
+      </section>
+    </div>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
